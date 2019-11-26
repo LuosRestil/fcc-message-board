@@ -38,7 +38,7 @@ module.exports = function(app, db) {
     .get((req, res) => {
       // req.params = {board: 'string'}
       let board = req.params.board;
-
+      
       db.collection(board)
         .find({})
         .sort({ bumped_on: -1 })
@@ -52,6 +52,7 @@ module.exports = function(app, db) {
           replies: { $slice: 3 }
         })
         .toArray((err, data) => {
+          // data == array of thread objects
           res.json(data);
         });
     })
@@ -85,6 +86,7 @@ module.exports = function(app, db) {
     })
 
     .put((req, res) => {
+      console.log(req.body);
       if (req.body.board && req.body.thread_id) {
         db.collection(req.params.board).findOneAndUpdate(
           { _id: ObjectID(req.body.thread_id) },
@@ -150,6 +152,7 @@ module.exports = function(app, db) {
             "replies.delete_password": 0
           })
           .toArray((err, data) => {
+            console.log(data)
             res.json(data[0]);
           });
       } else {
